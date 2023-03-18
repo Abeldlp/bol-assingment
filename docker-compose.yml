@@ -2,23 +2,23 @@ version: "3.9"
 
 services:
   #Database
-  # app-db:
-  #   image: postgres
-  #   container_name: app-db
-  #   environment:
-  #     POSTGRES_DB: "app-db"
-  #     POSTGRES_USER: "user"
-  #     POSTGRES_PASSWORD: "password"
-  #     POSTGRES_ROOT_PASSWORD: "password"
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready -d app-db -U user"]
-  #     interval: 5s
-  #     timeout: 5s
-  #     retries: 20
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - app-db-volume:/var/lib/mysql
+  app-db:
+    image: postgres
+    container_name: app-db
+    environment:
+      POSTGRES_DB: "app-db"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_ROOT_PASSWORD: "password"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d app-db -U user"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    ports:
+      - "5432:5432"
+    volumes:
+      - app-db-volume:/var/lib/mysql
 
   #Client app
   # client:
@@ -35,18 +35,18 @@ services:
   #     - api-service
 
   #Api gateway
-  # api-gateway:
-  #   container_name: api-gateway-container
-  #   build:
-  #     dockerfile: ./Dockerfile
-  #     context: ./api-gateway
-  #   image: abeldlp/api-gateway
-  #   env_file:
-  #     - ./api-gateway/.env.docker
-  #   ports:
-  #     - "5000:5000"
-  #   depends_on:
-  #     - api-service
+  api-gateway:
+    container_name: mancala-api-gateway-container
+    build:
+      dockerfile: ./Dockerfile
+      context: ./api-gateway
+    image: abeldlp/api-gateway
+    env_file:
+      - ./api-gateway/.env.docker
+    ports:
+      - "5000:5000"
+    # depends_on:
+    #   - api-service
 
   #Mancala API
   mancala-api:
@@ -65,19 +65,21 @@ services:
     #   app-db:
 
   #User API
-  # user-api:
-  #   container_name: user-api-container
-  #   build:
-  #     dockerfile: ./Dockerfile
-  #     context: ./user-api
-  #   env_file:
-  #     - ./user-api/.env.docker
-  #   image: abeldlp/mancala-user-api
-  #   ports:
-  #     - "8000:8000"
-  #   depends_on:
-  #     app-db:
-  #       condition: service_healthy
+  user-api:
+    container_name: user-api-container
+    build:
+      dockerfile: ./Dockerfile
+      context: ./user-api
+    env_file:
+      - ./user-api/.env.docker
+    image: abeldlp/mancala-user-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      app-db:
+        condition: service_healthy
+    volumes:
+      - ./user-api/:/app
 
   #Api service
   # api-service:

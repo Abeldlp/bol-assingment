@@ -6,12 +6,13 @@ import (
 )
 
 type MancalaUser struct {
+	gorm.Model
 	Username string `json:"username"`
 	Wins     int    `json:"wins"`
 }
 
 func GetUserById(user *MancalaUser, id string) *gorm.DB {
-	return config.DB.Where("username = ?", id).First(&user)
+	return config.DB.Where("id = ?", id).First(&user)
 }
 
 func CreateUser(user *MancalaUser) *gorm.DB {

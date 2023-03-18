@@ -1,17 +1,14 @@
-FROM golang:1.18-alpine
-
-RUN apk add build-base
+# Choose whatever you want, version >= 1.16
+FROM golang:1.20-alpine
 
 WORKDIR /app
 
-COPY . .
+RUN go install github.com/cosmtrek/air@latest
 
+COPY go.mod go.sum ./
 RUN go mod download
-
-
-RUN go build -o user-api
 
 EXPOSE 8000
 
-CMD [ "./user-api" ]
+CMD ["air", "-c", ".air.toml"]
 
