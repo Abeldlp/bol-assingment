@@ -1,33 +1,27 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/Abeldlp/mancala/entity"
+	"github.com/Abeldlp/bol-assignment/mancala-api/config"
+	"github.com/Abeldlp/bol-assignment/mancala-api/migration"
+	"github.com/Abeldlp/bol-assignment/mancala-api/route"
 )
 
 func main() {
-	player1 := entity.NewPlayer()
-	player2 := entity.NewPlayer()
 
-	player1.PlayRoundAgainstOpponent(2, player2)
-	player1.PlayRoundAgainstOpponent(3, player2)
+	// Initial setup
+	config.InitializeEnvironmentVariables()
+	config.InitializeDatabase()
 
-	player2.PlayRoundAgainstOpponent(2, player1)
-	player2.PlayRoundAgainstOpponent(1, player1)
+	// Migrations
+	migration.PlayerMigration()
+	migration.GameMigration()
 
-	player1.PlayRoundAgainstOpponent(4, player2)
-	player1.PlayRoundAgainstOpponent(5, player2)
+	// Initialize server
+	r := config.InitializeServer()
 
-	//Play one
-	player1.PlayRoundAgainstOpponent(0, player2)
+	//Routes
+	route.AppendMancalaGameRoute(r)
 
-	//Play two
-	// player2.PlayRoundAgainstOpponent(0, player1)
-	// player2.PlayRoundAgainstOpponent(1, player1)
-	// player2.PlayRoundAgainstOpponent(2, player1)
-	// player2.PlayRoundAgainstOpponent(3, player1)
-
-	fmt.Printf("player1: %d\n", player1)
-	fmt.Printf("player2: %d\n", player2)
+	// Run server
+	r.Run(":8000")
 }

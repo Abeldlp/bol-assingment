@@ -34,20 +34,6 @@ services:
   #   depends_on:
   #     - api-service
 
-  #Api gateway
-  api-gateway:
-    container_name: mancala-api-gateway-container
-    build:
-      dockerfile: ./Dockerfile
-      context: ./api-gateway
-    image: abeldlp/api-gateway
-    env_file:
-      - ./api-gateway/.env.docker
-    ports:
-      - "5000:5000"
-    # depends_on:
-    #   - api-service
-
   #Mancala API
   mancala-api:
     container_name: mancala-api-container
@@ -59,27 +45,42 @@ services:
       - ./mancala-api/.env.docker
     volumes:
       - ./mancala-api/:/app
-    # ports:
-    #   - "8000:8000"
-    # depends_on:
-    #   app-db:
-
-  #User API
-  user-api:
-    container_name: user-api-container
-    build:
-      dockerfile: ./Dockerfile
-      context: ./user-api
-    env_file:
-      - ./user-api/.env.docker
-    image: abeldlp/mancala-user-api
     ports:
       - "8000:8000"
     depends_on:
       app-db:
         condition: service_healthy
-    volumes:
-      - ./user-api/:/app
+
+  #Api gateway
+  api-gateway:
+    container_name: mancala-api-gateway-container
+    build:
+      dockerfile: ./Dockerfile
+      context: ./api-gateway
+    image: abeldlp/api-gateway
+    env_file:
+      - ./api-gateway/.env.docker
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mancala-api
+
+  #User API
+  # user-api:
+  #   container_name: user-api-container
+  #   build:
+  #     dockerfile: ./Dockerfile
+  #     context: ./user-api
+  #   env_file:
+  #     - ./user-api/.env.docker
+  #   image: abeldlp/mancala-user-api
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     app-db:
+  #       condition: service_healthy
+  #   volumes:
+  #     - ./user-api/:/app
 
   #Api service
   # api-service:
