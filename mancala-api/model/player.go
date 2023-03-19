@@ -89,11 +89,11 @@ func (p *Player) MoveStonesUntilBucket(index int, opponent *Player) (int, bool) 
 	}
 
 	lastHoleSet := setStones
-	lastHoleSetValue := p.Holes[lastHoleSet]
+	lastHoleSetValue := p.Holes[lastHoleSet+1]
 
 	if lastHoleSetValue == 1 {
-		oppositeHole := p.GetOppositeHole(lastHoleSet, opponent)
-		p.EmptyHole(lastHoleSet)
+		oppositeHole := p.GetOppositeHole(lastHoleSet+1, opponent)
+		p.EmptyHole(lastHoleSet + 1)
 		p.Bucket += oppositeHole + 1
 	}
 

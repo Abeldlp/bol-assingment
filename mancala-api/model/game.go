@@ -77,7 +77,6 @@ func (g *MancalaGame) IsGameOver() bool {
 	if g.Player1.GetHolesSum() == 0 || g.Player2.GetHolesSum() == 0 {
 		return true
 	}
-
 	return false
 }
 
