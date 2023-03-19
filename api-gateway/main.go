@@ -17,7 +17,7 @@ func main() {
 
 	r := gin.Default()
 
-	r.Any("/*proxyPath", handlers.ProxyTo(os.Getenv("API_SERVICE_URL")))
+	r.Any("/v1/api/*proxyPath", handlers.ProxyTo(os.Getenv("API_SERVICE_URL")))
 
 	r.Run(":5000")
 }

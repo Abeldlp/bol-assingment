@@ -1,14 +1,12 @@
-FROM golang:1.18-alpine
+FROM golang:1.20-alpine
 
 WORKDIR /app
 
-COPY . .
+RUN go install github.com/cosmtrek/air@latest
 
+COPY go.mod ./
 RUN go mod download
 
-RUN go build -o api-gateway
+EXPOSE 8000
 
-EXPOSE 5000
-
-CMD [ "./api-gateway" ]
-
+CMD ["air", "-c", ".air.toml"]

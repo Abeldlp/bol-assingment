@@ -60,6 +60,8 @@ services:
     image: abeldlp/api-gateway
     env_file:
       - ./api-gateway/.env.docker
+    volumes:
+      - ./api-gateway/:/app
     ports:
       - "5000:5000"
     depends_on:

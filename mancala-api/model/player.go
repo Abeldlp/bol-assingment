@@ -75,6 +75,10 @@ func (p *Player) MoveStonesUntilBucket(index int, opponent *Player) (int, bool) 
 	setStones := 0
 	lastIsBucket := false
 
+	if onHand == 0 {
+		return 0, true
+	}
+
 	for i := 1; i < onHand+1; i++ {
 		if index+i == len(p.Holes) {
 			setStones++
