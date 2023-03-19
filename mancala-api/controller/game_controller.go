@@ -3,9 +3,12 @@ package controller
 import (
 	"net/http"
 
+	"github.com/Abeldlp/bol-assignment/mancala-api/config"
 	"github.com/Abeldlp/bol-assignment/mancala-api/entity"
 	"github.com/Abeldlp/bol-assignment/mancala-api/model"
+	"github.com/Abeldlp/bol-assignment/mancala-api/util"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/clause"
 )
 
 func CreateMancalaGame(c *gin.Context) {
@@ -29,26 +32,22 @@ func UpdateMancalaGame(c *gin.Context) {
 		return
 	}
 
-	// if err := c.BindJSON(&game); err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{
-	// 		"message": "Could not serialize payload",
-	// 	})
-	// 	return
-	// }
+	game.Player1.ID = game.Player1ID
+	game.Player2.ID = game.Player2ID
 
-	// type Response struct {
-	// 	SelectedPit int `json:"selectedPit"`
-	// }
+	type Response struct {
+		SelectedPit int `json:"selected-pit"`
+	}
 
-	// var ResponseBody Response
+	var ResponseBody Response
 
-	// c.BindJSON(&ResponseBody)
+	c.BindJSON(&ResponseBody)
 
-	// game.PlayRound(ResponseBody.SelectedPit)
+	game.PlayRound(ResponseBody.SelectedPit)
 
-	// config.DB.Save(&game)
-	// config.DB.Save(&game.Player1)
-	// config.DB.Save(&game.Player2)
+	config.DB.Omit(clause.Associations).Save(&game)
+
+	util.LogBoard(game)
 
 	c.JSON(http.StatusOK, game)
 }

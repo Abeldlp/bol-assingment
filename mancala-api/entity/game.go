@@ -36,7 +36,18 @@ func CreateNewMancalaGame() (*model.MancalaGame, error) {
 }
 
 func GetMancalaGameById(game *model.MancalaGame, id string) error {
-	result := config.DB.Preload("Player1").Preload("Player2").First(&game, id)
+	result := config.DB.First(&game, id)
+
+	player1 := config.DB.First(&game.Player1, game.Player1ID)
+	if player1.Error != nil {
+		return player1.Error
+	}
+
+	player2 := config.DB.First(&game.Player2, game.Player2ID)
+	if player2.Error != nil {
+		return player2.Error
+	}
+
 	if result.Error != nil {
 		return result.Error
 	}

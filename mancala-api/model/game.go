@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/Abeldlp/bol-assignment/mancala-api/config"
 	"gorm.io/gorm"
 )
 
@@ -10,7 +11,7 @@ type MancalaGame struct {
 	Player1ID uint
 	Player2   Player `gorm:"foreignKey:ID"`
 	Player2ID uint
-	Turn      int  `json:"turn" gorm:"default:1"`
+	Turn      int  `json:"turn" gorm:"default:0"`
 	GameOver  bool `json:"game_over" gorm:"default:false"`
 }
 
@@ -44,7 +45,13 @@ func (g *MancalaGame) PlayRound(holeIndex int) {
 	player := g.GetCurentPlayer()
 	opponent := g.GetOpponent()
 
-	player.PlayRoundAgainstOpponent(holeIndex, &opponent)
+	lasBucket := player.PlayRoundAgainstOpponent(holeIndex, &opponent)
+
+	g.SetMancalaGameUser(player.ID, player)
+	g.SetMancalaGameUser(opponent.ID, opponent)
+
+	config.DB.Save(&player)
+	config.DB.Save(&opponent)
 
 	if player.GetHolesSum() == 0 {
 		opponent.Bucket += opponent.GetHolesSum()
@@ -54,7 +61,16 @@ func (g *MancalaGame) PlayRound(holeIndex int) {
 		player.Bucket += player.GetHolesSum()
 	}
 
+	g.NextTurn(lasBucket)
+
 	g.GameOver = g.IsGameOver()
+}
+
+func (g *MancalaGame) NextTurn(lastStoneInBucket bool) {
+	if lastStoneInBucket {
+		return
+	}
+	g.Turn++
 }
 
 func (g *MancalaGame) IsGameOver() bool {
@@ -70,4 +86,12 @@ func (g *MancalaGame) GetWinner() Player {
 		return g.Player1
 	}
 	return g.Player2
+}
+
+func (g *MancalaGame) SetMancalaGameUser(id uint, player Player) {
+	if g.Player1.ID == id {
+		g.Player1 = player
+		return
+	}
+	g.Player2 = player
 }
