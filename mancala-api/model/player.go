@@ -32,8 +32,9 @@ func (p *Player) IncrementBucket() {
 }
 
 func (p *Player) GetOppositeHole(index int, opponent *Player) int {
-	amount := opponent.Holes[len(opponent.Holes)-1-index]
-	opponent.EmptyHole(len(opponent.Holes) - 1 - index)
+	oppositeIndex := len(p.Holes) - 1 - index
+	amount := opponent.Holes[oppositeIndex]
+	opponent.EmptyHole(oppositeIndex)
 	return amount
 }
 
@@ -56,11 +57,13 @@ func (p *Player) IncrementHolesWithRemainingStones(onHand int, opponent *Player)
 
 	lastHoleSet := setStones - 1
 	lastHoleSetValue := p.Holes[lastHoleSet]
-	oppositeHole := p.GetOppositeHole(lastHoleSet, opponent)
+	oppositeIndex := len(p.Holes) - 1 - lastHoleSet
+	oppositeHole := opponent.Holes[oppositeIndex]
 
 	if lastHoleSetValue == 1 && oppositeHole > 0 {
 		p.EmptyHole(lastHoleSet)
 		p.Bucket += oppositeHole + 1
+		opponent.EmptyHole(oppositeIndex)
 	}
 
 	return 0, lastIsBucket
@@ -73,8 +76,7 @@ func (p *Player) MoveStonesUntilBucket(index int, opponent *Player) (int, bool) 
 	lastIsBucket := false
 
 	for i := 1; i < onHand+1; i++ {
-
-		if i+index == len(p.Holes) {
+		if index+i == len(p.Holes) {
 			setStones++
 			p.IncrementBucket()
 
@@ -88,13 +90,15 @@ func (p *Player) MoveStonesUntilBucket(index int, opponent *Player) (int, bool) 
 		setStones++
 	}
 
-	lastHoleSet := setStones
-	lastHoleSetValue := p.Holes[lastHoleSet+1]
+	lastHoleSet := index + setStones
+	lastHoleSetValue := p.Holes[lastHoleSet]
+	oppositeIndex := len(p.Holes) - 1 - lastHoleSet
+	oppositeHole := opponent.Holes[oppositeIndex]
 
-	if lastHoleSetValue == 1 {
-		oppositeHole := p.GetOppositeHole(lastHoleSet+1, opponent)
-		p.EmptyHole(lastHoleSet + 1)
+	if lastHoleSetValue == 1 && oppositeHole > 0 {
+		p.EmptyHole(lastHoleSet)
 		p.Bucket += oppositeHole + 1
+		opponent.EmptyHole(oppositeIndex)
 	}
 
 	return 0, lastIsBucket

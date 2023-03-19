@@ -22,7 +22,10 @@ func LogBoard(game model.MancalaGame) {
 		return "player2"
 	}
 
+	log.Default().Println("")
+	log.Default().Printf("\nGAME: %d\n", game.ID)
 	log.Default().Println("player2: ", game.Player2.Bucket, ReverseBoard(game.Player2.Holes))
 	log.Default().Println("player1:   ", game.Player1.Holes, game.Player1.Bucket)
-	log.Default().Println("now moving: ", next(&game))
+	log.Default().Printf("now moving: %s\n", next(&game))
+	log.Default().Println("")
 }
