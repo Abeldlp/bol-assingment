@@ -27,6 +27,12 @@ func (p *Player) EmptyHole(index int) {
 	p.Holes[index] = 0
 }
 
+func (p *Player) EmptyAllHoles() {
+	for i := 0; i < len(p.Holes); i++ {
+		p.EmptyHole(i)
+	}
+}
+
 func (p *Player) IncrementBucket() {
 	p.Bucket += 1
 }

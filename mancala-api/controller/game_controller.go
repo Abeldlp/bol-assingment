@@ -14,7 +14,7 @@ import (
 func GetAllMancalaGames(c *gin.Context) {
 	var games []model.MancalaGame
 
-	result := config.DB.Preload(clause.Associations).Find(&games)
+	result := config.DB.Preload(clause.Associations).Order("ID asc").Find(&games)
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": result.Error.Error(),

@@ -7,9 +7,11 @@ const props = defineProps<{
   index: number;
   playerId: number;
   bottomPlayer: boolean;
+  disabled: boolean;
 }>();
 
 const updatePit = () => {
+  if (props.disabled || props.stones === 0) return;
   playRound(props.index);
 };
 </script>
@@ -39,8 +41,8 @@ const updatePit = () => {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  /* height: 100%; */
   padding: 1rem;
   cursor: pointer;
+  position: relative;
 }
 </style>

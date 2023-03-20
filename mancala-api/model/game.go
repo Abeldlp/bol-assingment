@@ -50,9 +50,6 @@ func (g *MancalaGame) PlayRound(holeIndex int) {
 	g.SetMancalaGameUser(player.ID, player)
 	g.SetMancalaGameUser(opponent.ID, opponent)
 
-	config.DB.Save(&player)
-	config.DB.Save(&opponent)
-
 	if player.GetHolesSum() == 0 {
 		opponent.Bucket += opponent.GetHolesSum()
 	}
@@ -64,6 +61,17 @@ func (g *MancalaGame) PlayRound(holeIndex int) {
 	g.NextTurn(lasBucket)
 
 	g.GameOver = g.IsGameOver()
+
+	if g.GameOver {
+		g.Player1.Bucket += g.Player1.GetHolesSum()
+		player.EmptyAllHoles()
+
+		g.Player2.Bucket += g.Player2.GetHolesSum()
+		opponent.EmptyAllHoles()
+	}
+
+	config.DB.Save(&player)
+	config.DB.Save(&opponent)
 }
 
 func (g *MancalaGame) NextTurn(lastStoneInBucket bool) {
