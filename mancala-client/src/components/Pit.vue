@@ -18,15 +18,14 @@ const updatePit = () => {
 
 <template>
   <div class="pit" @click="updatePit">
-    <Stone v-for="(_, index) in stones" :key="playerId + '-' + index" />
-    <q-tooltip
-      v-if="!bottomPlayer"
-      anchor="top middle"
-      self="bottom middle"
-      :offset="[10, 10]"
-      >{{ stones }}
-    </q-tooltip>
-    <q-tooltip v-if="bottomPlayer">{{ stones }} </q-tooltip>
+    <h5 v-if="!bottomPlayer" class="stone-top">{{ stones }}</h5>
+    <Stone
+      v-for="(_, index) in stones"
+      :key="playerId + '-' + index"
+      :left="35"
+      :top="35"
+    />
+    <h5 v-if="bottomPlayer" class="stone-bottom">{{ stones }}</h5>
   </div>
 </template>
 
@@ -35,14 +34,30 @@ const updatePit = () => {
   width: 10em;
   height: 10em;
   border-radius: 50%;
-  border: 1px solid #000;
   margin: 0.5em;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
   cursor: pointer;
   position: relative;
+  background: #b37a5f;
+  box-shadow: inset 8px 8px 16px #7d5543, inset -8px -8px 16px #e99f7c;
+  user-select: none;
+  font-family: "Economica", sans-serif;
+}
+
+.stone-top {
+  position: absolute;
+  top: -55%;
+  left: 25%;
+  right: 25%;
+}
+
+.stone-bottom {
+  position: absolute;
+  bottom: -55%;
+  left: 25%;
+  right: 25%;
 }
 </style>

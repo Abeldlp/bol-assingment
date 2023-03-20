@@ -27,6 +27,7 @@ onMounted(async () => {
   <div class="create-change-game-conatiner">
     <q-btn
       @click="createAndSetGame"
+      no-caps
       color="white"
       text-color="black"
       label="Create Game"

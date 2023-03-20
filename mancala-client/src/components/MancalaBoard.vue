@@ -2,6 +2,7 @@
 import Pit from "./Pit.vue";
 import { computed } from "vue";
 import { mancalaGame, currentPlayer } from "../data/mancalaGame";
+import Bucket from "./Bucket.vue";
 
 const opponentBoard = computed(() => {
   const reversedArray = mancalaGame.value?.Player2.holes;
@@ -32,47 +33,52 @@ const winner = computed(() => {
 
     <div class="mancala-board">
       <div class="bucket">
-        <h4>Player2 Bucket {{ mancalaGame?.Player2.bucket }}</h4>
+        <Bucket :stones="mancalaGame?.Player2.bucket" />
       </div>
-      <div class="pit-row">
-        <Pit
-          :disabled="currentPlayer === 'Player 1'"
-          :player-id="mancalaGame?.Player2.ID"
-          v-for="pit in opponentBoard"
-          :stones="pit.hole"
-          :index="pit.index"
-          :key="pit.index + '-' + mancalaGame?.Player2.ID"
-          :bottom-player="false"
-        />
-      </div>
-      <br />
-      <q-separator />
-      <br />
-      <div class="pit-row">
-        <Pit
-          :disabled="currentPlayer === 'Player 2'"
-          :player-id="mancalaGame?.Player1.ID"
-          v-for="(pit, index) in mancalaGame?.Player1.holes"
-          :stones="pit"
-          :index="index"
-          :key="index + '-' + mancalaGame?.Player1.ID"
-          :bottom-player="true"
-        />
+      <div>
+        <div class="pit-row">
+          <Pit
+            :disabled="currentPlayer === 'Player 1'"
+            :player-id="mancalaGame?.Player2.ID"
+            v-for="pit in opponentBoard"
+            :stones="pit.hole"
+            :index="pit.index"
+            :key="pit.index + '-' + mancalaGame?.Player2.ID"
+            :bottom-player="false"
+          />
+        </div>
+        <br />
+        <q-separator />
+        <br />
+        <div class="pit-row">
+          <Pit
+            :disabled="currentPlayer === 'Player 2'"
+            :player-id="mancalaGame?.Player1.ID"
+            v-for="(pit, index) in mancalaGame?.Player1.holes"
+            :stones="pit"
+            :index="index"
+            :key="index + '-' + mancalaGame?.Player1.ID"
+            :bottom-player="true"
+          />
+        </div>
       </div>
       <div class="bucket">
-        <h4>Player1 Bucket {{ mancalaGame?.Player1.bucket }}</h4>
+        <Bucket :stones="mancalaGame?.Player1.bucket" />
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.manca-board {
+.mancala-board {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
+  padding: 100px;
+  border-radius: 16px;
+  background-color: #b37a5f;
+  box-shadow: 10px 10px 20px #cacaca, -10px -10px 20px #f6f6f6;
 }
 
 .pit-row {
