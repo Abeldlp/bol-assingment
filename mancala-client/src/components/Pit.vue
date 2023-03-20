@@ -5,6 +5,8 @@ import { playRound } from "../data/mancalaGame";
 const props = defineProps<{
   stones: number;
   index: number;
+  playerId: number;
+  bottomPlayer: boolean;
 }>();
 
 const updatePit = () => {
@@ -14,7 +16,15 @@ const updatePit = () => {
 
 <template>
   <div class="pit" @click="updatePit">
-    <Stone v-for="i in stones" :key="i" />
+    <Stone v-for="(_, index) in stones" :key="playerId + '-' + index" />
+    <q-tooltip
+      v-if="!bottomPlayer"
+      anchor="top middle"
+      self="bottom middle"
+      :offset="[10, 10]"
+      >{{ stones }}
+    </q-tooltip>
+    <q-tooltip v-if="bottomPlayer">{{ stones }} </q-tooltip>
   </div>
 </template>
 
