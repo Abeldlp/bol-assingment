@@ -1,7 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MancalaBoard from "./components/MancalaBoard.vue";
+</script>
 
 <template>
   <h1>Mancala Game</h1>
+  <MancalaBoard />
 </template>
 
 <style scoped>
