@@ -27,7 +27,7 @@ func InitializeDatabase() {
 	DB = db
 }
 
-func InitializeTestDB() {
+func SetupTestDB() {
 	test_db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
 	if err != nil {
 		fmt.Println("db err: (TestDBInit) ", err)
@@ -35,8 +35,8 @@ func InitializeTestDB() {
 	DB = test_db
 }
 
-func TestDBFree(test_db *gorm.DB) error {
-	db, _ := test_db.DB()
+func CloseTestDB() error {
+	db, _ := DB.DB()
 	db.Close()
 	err := os.Remove("./gorm.db")
 	return err
