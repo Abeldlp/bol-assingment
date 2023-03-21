@@ -1,7 +1,6 @@
 package model
 
 import (
-	"github.com/Abeldlp/bol-assignment/mancala-api/config"
 	"gorm.io/gorm"
 )
 
@@ -69,9 +68,6 @@ func (g *MancalaGame) PlayRound(holeIndex int) {
 		g.Player2.Bucket += g.Player2.GetHolesSum()
 		opponent.EmptyAllHoles()
 	}
-
-	config.DB.Save(&player)
-	config.DB.Save(&opponent)
 }
 
 func (g *MancalaGame) NextTurn(lastStoneInBucket bool) {

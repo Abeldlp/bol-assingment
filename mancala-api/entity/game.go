@@ -68,6 +68,16 @@ func CreateNewMancalaGame() (*model.MancalaGame, error) {
 }
 
 func UpdateMancala(game *model.MancalaGame) error {
+	p1err := UpdatePlayer(&game.Player1)
+	if p1err != nil {
+		return p1err
+	}
+
+	p2err := UpdatePlayer(&game.Player2)
+	if p2err != nil {
+		return p2err
+	}
+
 	result := config.DB.Omit(clause.Associations).Save(&game)
 	if result.Error != nil {
 		return result.Error
