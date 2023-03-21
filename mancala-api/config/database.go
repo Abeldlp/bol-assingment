@@ -27,13 +27,12 @@ func InitializeDatabase() {
 	DB = db
 }
 
-func TestDBInit() *gorm.DB {
+func InitializeTestDB() {
 	test_db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
 	if err != nil {
 		fmt.Println("db err: (TestDBInit) ", err)
 	}
 	DB = test_db
-	return DB
 }
 
 func TestDBFree(test_db *gorm.DB) error {
