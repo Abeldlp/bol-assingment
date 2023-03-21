@@ -8,20 +8,15 @@ import (
 
 func main() {
 
-	// Initial setup
 	config.InitializeEnvironmentVariables()
 	config.InitializeDatabase()
 
-	// Migrations
 	migration.PlayerMigration()
 	migration.GameMigration()
 
-	// Initialize server
 	r := config.InitializeServer()
 
-	//Routes
 	route.AppendMancalaGameRoute(r)
 
-	// Run server
 	r.Run(":8000")
 }

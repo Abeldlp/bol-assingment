@@ -9,9 +9,9 @@ func AppendMancalaGameRoute(r *gin.Engine) {
 	mancalaGame := r.Group("/mancala-game")
 
 	{
-		mancalaGame.GET("", controller.GetAllMancalaGames)
-		mancalaGame.GET("/:id", controller.GetMancalaGame)
-		mancalaGame.POST("", controller.CreateMancalaGame)
-		mancalaGame.PUT("/:id", controller.UpdateMancalaGame)
+		mancalaGame.GET("", controller.GetAll)
+		mancalaGame.GET("/:id", controller.GetById)
+		mancalaGame.POST("", controller.Create)
+		mancalaGame.PUT("/:id", controller.Update)
 	}
 }

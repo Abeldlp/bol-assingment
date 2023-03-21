@@ -16,7 +16,7 @@ func CreateNewPlayer() (*model.Player, error) {
 	return player, nil
 }
 
-func GetPlayerById(player *model.Player, id string) error {
+func GetPlayerById(player *model.Player, id uint) error {
 	result := config.DB.First(&player, id)
 	if result.Error != nil {
 		return result.Error
@@ -25,13 +25,8 @@ func GetPlayerById(player *model.Player, id string) error {
 	return nil
 }
 
-func UpdatePlayer(player *model.Player, id int) error {
-	result := config.DB.First(&player, id)
-	if result.Error != nil {
-		return result.Error
-	}
-
-	result = config.DB.Save(&player)
+func UpdatePlayer(player *model.Player) error {
+	result := config.DB.Save(&player)
 	if result.Error != nil {
 		return result.Error
 	}

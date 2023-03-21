@@ -88,13 +88,6 @@ func (g *MancalaGame) IsGameOver() bool {
 	return false
 }
 
-func (g *MancalaGame) GetWinner() Player {
-	if g.Player1.Bucket > g.Player2.Bucket {
-		return g.Player1
-	}
-	return g.Player2
-}
-
 func (g *MancalaGame) SetMancalaGameUser(id uint, player Player) {
 	if g.Player1.ID == id {
 		g.Player1 = player

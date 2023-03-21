@@ -3,21 +3,18 @@ package controller
 import (
 	"net/http"
 
-	"github.com/Abeldlp/bol-assignment/mancala-api/config"
 	"github.com/Abeldlp/bol-assignment/mancala-api/entity"
 	"github.com/Abeldlp/bol-assignment/mancala-api/model"
 	"github.com/Abeldlp/bol-assignment/mancala-api/util"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm/clause"
 )
 
-func GetAllMancalaGames(c *gin.Context) {
-	var games []model.MancalaGame
+func GetAll(c *gin.Context) {
+	games, err := entity.GetAllMancalaGames()
 
-	result := config.DB.Preload(clause.Associations).Order("ID asc").Find(&games)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": result.Error.Error(),
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err.Error(),
 		})
 		return
 	}
@@ -25,10 +22,10 @@ func GetAllMancalaGames(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": games})
 }
 
-func GetMancalaGame(c *gin.Context) {
+func GetById(c *gin.Context) {
 	var game model.MancalaGame
 	if err := entity.GetMancalaGameById(&game, c.Param("id")); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -40,10 +37,10 @@ func GetMancalaGame(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": game})
 }
 
-func CreateMancalaGame(c *gin.Context) {
+func Create(c *gin.Context) {
 	game, err := entity.CreateNewMancalaGame()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"message": "Something went wrong",
 		})
 		return
@@ -52,10 +49,10 @@ func CreateMancalaGame(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": game})
 }
 
-func UpdateMancalaGame(c *gin.Context) {
+func Update(c *gin.Context) {
 	var game model.MancalaGame
 	if err := entity.GetMancalaGameById(&game, c.Param("id")); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -74,9 +71,14 @@ func UpdateMancalaGame(c *gin.Context) {
 
 	game.PlayRound(ResponseBody.SelectedPit)
 
-	config.DB.Omit(clause.Associations).Save(&game)
+	if err := entity.UpdateMancala(&game); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 
-	util.LogBoard(game)
+	util.LogBoard(game) //DEBUG PURPOSES
 
 	c.JSON(http.StatusOK, game)
 }
