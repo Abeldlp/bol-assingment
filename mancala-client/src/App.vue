@@ -24,26 +24,37 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="create-change-game-conatiner">
+  <div style="display: inline">
     <q-btn
       @click="createAndSetGame"
       no-caps
       color="white"
       text-color="black"
-      label="Create Game"
+      label="Create New Game"
     />
-    <q-select
-      @input="selectGame"
-      @update:model-value=""
-      v-model="selected"
-      :options="allGames"
-      width="100px"
-      label="Select Game"
-      outlined
-      color="gray"
-      text-color="black"
-    >
-    </q-select>
+    <div class="q-pa-md" style="max-width: 300px; margin: 0 auto">
+      <div class="q-gutter-md">
+        <q-select
+          class="q-mt-md"
+          @input="selectGame"
+          v-model="selected"
+          :options="allGames"
+          label="Select Game"
+          color="gray"
+          text-color="black"
+          dense
+          outlined
+        >
+          <template #no-option>
+            <q-item>
+              <q-item-section class="text-grey">
+                No results. Create a Game.
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+      </div>
+    </div>
   </div>
   <MancalaBoard />
 </template>
