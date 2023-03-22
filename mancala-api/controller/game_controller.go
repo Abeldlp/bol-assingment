@@ -9,6 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ListMancalaGames godoc
+//
+//	@Summary		List mancala games
+//	@Description	get mancala games
+//	@Produce		json
+//	@Success		200	{array}		model.MancalaGame
+//	@Failure		404	{object}	object{error string}
+//	@Router			/mancala-game [get]
+//	@Tags			MancalaGames
 func GetAll(c *gin.Context) {
 	games, err := entity.GetAllMancalaGames()
 
@@ -22,6 +31,16 @@ func GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": games})
 }
 
+// ShowMancalaGame godoc
+//
+//	@Summary		Get mancala game by id
+//	@Description	get single mancala game
+//	@Produce		json
+//	@Param			id	path		int	true	"MancalaGame ID"
+//	@Success		200	{object}	model.MancalaGame
+//	@Failure		404
+//	@Router			/mancala-game/{id} [get]
+//	@Tags			MancalaGames
 func GetById(c *gin.Context) {
 	var game model.MancalaGame
 	if err := entity.GetMancalaGameById(&game, c.Param("id")); err != nil {
@@ -37,11 +56,20 @@ func GetById(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": game})
 }
 
+// CreateMancalaGame godoc
+//
+//	@Summary		Create new Mancala along with two players
+//	@Description	Create new Mancala game
+//	@Produce		json
+//	@Success		201	{object}	model.MancalaGame
+//	@Failure		400	{object}	object{error string}
+//	@Router			/mancala-game [post]
+//	@Tags			MancalaGames
 func Create(c *gin.Context) {
 	game, err := entity.CreateNewMancalaGame()
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"message": "Something went wrong",
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 		})
 		return
 	}
@@ -49,6 +77,17 @@ func Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"data": game})
 }
 
+// UpdateMancalaGame godoc
+//
+//	@Summary		Create new Mancala along with two players
+//	@Description	Create new Mancala game
+//	@Param			selected-pit	body	int	true	"Selected pit for the round"	Enums(1,2,3,4,5,6)
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	model.MancalaGame
+//	@Failure		400	{object}	object{error string}
+//	@Router			/mancala-game/{id} [put]
+//	@Tags			MancalaGames
 func Update(c *gin.Context) {
 	var game model.MancalaGame
 	if err := entity.GetMancalaGameById(&game, c.Param("id")); err != nil {
@@ -72,7 +111,7 @@ func Update(c *gin.Context) {
 	game.PlayRound(ResponseBody.SelectedPit)
 
 	if err := entity.UpdateMancala(&game); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return

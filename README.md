@@ -9,6 +9,7 @@ You are able to create a new game, and play it. The game is persistent, so you c
 - [Application Structure](#application-structure)
 - [Application Dataflow](#application-dataflow)
 - [Running app locally](#running-app-locally)
+- [Api Documentation](#api-documentation)
 - [Application testing](#application-testing)
 - [Application usage](#application-usage)
 - [Author message](#author-message)
@@ -88,6 +89,20 @@ docker-compose down
 ```
 
 > Optionaly if you have `make` and `build-essentials` installed locally you can make use of the `Makefile`
+
+### Api Documentation
+
+The api documentation is available on [http://localhost:5000/v1/api/docs/index.html](http://localhost:5000/v1/api/docs/index.html)
+
+The api documentation is generated using [swag](https://github.com/swaggo/swag). To generate the documentation you can run the following command
+>Note: to generate the documentation you need swag installed locally. Refer to the [docs](https://github.com/swaggo/swag#getting-started) to install it.
+
+```bash
+make docs
+```
+
+This will generate the documentation and update the `docs` folder.
+The docs folder is served by mancala api through the api gateway.
 
 ### Application testing
 

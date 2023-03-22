@@ -7,4 +7,5 @@ down:
 test:
 	cd mancala-api && go test ./test/...
 	cd api-gateway && go test ./test/...
-
+docs:
+	cd mancala-api && swag init --parseDependency --parseInternal

@@ -1,0 +1,152 @@
+basePath: /v1/api
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  model.MancalaGame:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      game_over:
+        type: boolean
+      id:
+        type: integer
+      player1:
+        $ref: '#/definitions/model.Player'
+      player1ID:
+        type: integer
+      player2:
+        $ref: '#/definitions/model.Player'
+      player2ID:
+        type: integer
+      turn:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  model.Player:
+    properties:
+      bucket:
+        type: integer
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      holes:
+        items:
+          type: integer
+        type: array
+      id:
+        type: integer
+      mancala_game_id:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:5000
+info:
+  contact:
+    email: abel45991690@gmail.com
+  description: Mancala api for bol assignment
+  title: Mancala API
+  version: "1.0"
+paths:
+  /mancala-game:
+    get:
+      description: get mancala games
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.MancalaGame'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      summary: List mancala games
+      tags:
+      - MancalaGames
+    post:
+      description: Create new Mancala game
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.MancalaGame'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      summary: Create new Mancala along with two players
+      tags:
+      - MancalaGames
+  /mancala-game/{id}:
+    get:
+      description: get single mancala game
+      parameters:
+      - description: MancalaGame ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MancalaGame'
+        "404":
+          description: Not Found
+      summary: Get mancala game by id
+      tags:
+      - MancalaGames
+    put:
+      consumes:
+      - application/json
+      description: Create new Mancala game
+      parameters:
+      - description: Selected pit for the round
+        enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        in: body
+        name: selected-pit
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MancalaGame'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      summary: Create new Mancala along with two players
+      tags:
+      - MancalaGames
+swagger: "2.0"

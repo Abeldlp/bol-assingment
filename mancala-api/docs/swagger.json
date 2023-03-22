@@ -1,0 +1,228 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Mancala api for bol assignment",
+        "title": "Mancala API",
+        "contact": {
+            "email": "abel45991690@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:5000",
+    "basePath": "/v1/api",
+    "paths": {
+        "/mancala-game": {
+            "get": {
+                "description": "get mancala games",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MancalaGames"
+                ],
+                "summary": "List mancala games",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.MancalaGame"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create new Mancala game",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MancalaGames"
+                ],
+                "summary": "Create new Mancala along with two players",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.MancalaGame"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/mancala-game/{id}": {
+            "get": {
+                "description": "get single mancala game",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MancalaGames"
+                ],
+                "summary": "Get mancala game by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "MancalaGame ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MancalaGame"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "put": {
+                "description": "Create new Mancala game",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MancalaGames"
+                ],
+                "summary": "Create new Mancala along with two players",
+                "parameters": [
+                    {
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "description": "Selected pit for the round",
+                        "name": "selected-pit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MancalaGame"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
+        "model.MancalaGame": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "game_over": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "player1": {
+                    "$ref": "#/definitions/model.Player"
+                },
+                "player1ID": {
+                    "type": "integer"
+                },
+                "player2": {
+                    "$ref": "#/definitions/model.Player"
+                },
+                "player2ID": {
+                    "type": "integer"
+                },
+                "turn": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Player": {
+            "type": "object",
+            "properties": {
+                "bucket": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "holes": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "mancala_game_id": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}
