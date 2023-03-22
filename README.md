@@ -1,9 +1,4 @@
-<p align="center">
-  <img
-    src="assets/golang.png"
-    height="150px"
-  />
-</p>
+![Caption](assets/intro.gif)
 
 ## International Space Station app
 
