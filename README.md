@@ -110,7 +110,13 @@ To run them individually you can run the following:
 cd mancala-api && go test ./test/...
 ```
 
-or use the Makefile
+**Api Gateway**
+
+```bash
+cd api-gateway && go test ./test/...
+```
+
+or use the Makefile to run both
 
 ```bash
 make test
