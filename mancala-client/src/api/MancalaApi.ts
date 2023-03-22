@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/v1/api/mancala-game";
+const API_URL = import.meta.env.VITE_APP_API_GATEWAY + "/v1/api/mancala-game";
 
 export const getAll = async () => {
   const response = await axios.get(`${API_URL}`);

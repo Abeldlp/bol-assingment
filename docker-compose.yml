@@ -12,7 +12,7 @@ services:
       POSTGRES_ROOT_PASSWORD: "password"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d app-db -U user"]
-      interval: 5s
+      interval: 2s
       timeout: 5s
       retries: 20
     ports:
@@ -20,19 +20,21 @@ services:
     volumes:
       - app-db-volume:/var/lib/mysql
 
-  #Client app
-  # client:
-  #   container_name: client-container
-  #   build:
-  #     dockerfile: ./Dockerfile
-  #     context: ./client
-  #   image: abeldlp/client
-  #   env_file:
-  #     - ./client/.env
-  #   ports:
-  #     - "3000:8080"
-  #   depends_on:
-  #     - api-service
+  # Client app
+  client:
+    container_name: mancala-client-container
+    build:
+      dockerfile: ./Dockerfile
+      context: ./mancala-client
+    image: abeldlp/mancala-client
+    env_file:
+      - ./mancala-api/.env.docker
+    volumes:
+      - ./mancala-client/:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mancala-api
 
   #Mancala API
   mancala-api:
@@ -45,8 +47,8 @@ services:
       - ./mancala-api/.env.docker
     volumes:
       - ./mancala-api/:/app
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     depends_on:
       app-db:
         condition: service_healthy
@@ -66,38 +68,6 @@ services:
       - "5000:5000"
     depends_on:
       - mancala-api
-
-  #User API
-  # user-api:
-  #   container_name: user-api-container
-  #   build:
-  #     dockerfile: ./Dockerfile
-  #     context: ./user-api
-  #   env_file:
-  #     - ./user-api/.env.docker
-  #   image: abeldlp/mancala-user-api
-  #   ports:
-  #     - "8000:8000"
-  #   depends_on:
-  #     app-db:
-  #       condition: service_healthy
-  #   volumes:
-  #     - ./user-api/:/app
-
-  #Api service
-  # api-service:
-  #   container_name: api-service-container
-  #   build:
-  #     dockerfile: ./Dockerfile
-  #     context: ./api-service
-  #   env_file:
-  #     - ./api-service/.env.docker
-  #   image: abeldlp/api-service
-  #   ports:
-  #     - "8000:8000"
-  #   depends_on:
-  #     app-db:
-  #       condition: service_healthy
 
 volumes:
   app-db-volume:
