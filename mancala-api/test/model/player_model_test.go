@@ -58,18 +58,6 @@ func TestPlayer_IncrementBucket(t *testing.T) {
 	}
 }
 
-func TestPlayer_GetOppositeHole(t *testing.T) {
-	p1 := model.NewPlayer()
-	p2 := model.NewPlayer()
-	p2.Holes[5] = 6
-
-	amount := p1.GetOppositeHole(0, p2)
-
-	if amount != 6 {
-		t.Errorf("Expected to get 4 stones from the opposite hole but got %d", amount)
-	}
-}
-
 func TestPlayer_IncrementHolesWithRemainingStones_UntilBucket(t *testing.T) {
 	p1 := model.NewPlayer()
 	p2 := model.NewPlayer()
@@ -148,7 +136,7 @@ func TestPlayer_IncrementHolesWithRemainingStones_DontGrabOpponentStones(t *test
 	}
 }
 
-func TestPlayer_MoveStoesUntilBucket(t *testing.T) {
+func TestPlayer_MoveStonesUntilBucket(t *testing.T) {
 	p1 := model.NewPlayer()
 	p2 := model.NewPlayer()
 
@@ -163,7 +151,7 @@ func TestPlayer_MoveStoesUntilBucket(t *testing.T) {
 	}
 }
 
-func TestPlayer_MoveStoesUntilBucket_BeforeBucket(t *testing.T) {
+func TestPlayer_MoveStonesUntilBucket_BeforeBucket(t *testing.T) {
 	p1 := model.NewPlayer()
 	p2 := model.NewPlayer()
 
@@ -178,7 +166,7 @@ func TestPlayer_MoveStoesUntilBucket_BeforeBucket(t *testing.T) {
 	}
 }
 
-func TestPlayer_MoveStoesUntilBucket_PastBucket(t *testing.T) {
+func TestPlayer_MoveStonesUntilBucket_PastBucket(t *testing.T) {
 	p1 := model.NewPlayer()
 	p2 := model.NewPlayer()
 
@@ -193,7 +181,7 @@ func TestPlayer_MoveStoesUntilBucket_PastBucket(t *testing.T) {
 	}
 }
 
-func TestPlayer_MoveStoesUntilBucket_GrabOpponentStones(t *testing.T) {
+func TestPlayer_MoveStonesUntilBucket_GrabOpponentStones(t *testing.T) {
 	p1 := model.NewPlayer()
 	p2 := model.NewPlayer()
 	p1.Holes[5] = 0
@@ -209,7 +197,7 @@ func TestPlayer_MoveStoesUntilBucket_GrabOpponentStones(t *testing.T) {
 	}
 }
 
-func TestPlayer_MoveStoesUntilBucket_DontGrabOpponentStones(t *testing.T) {
+func TestPlayer_MoveStonesUntilBucket_DontGrabOpponentStones(t *testing.T) {
 	p1 := model.NewPlayer()
 	p2 := model.NewPlayer()
 	p1.Holes[5] = 0
@@ -285,4 +273,21 @@ func TestPlayer_PlayRound(t *testing.T) {
 		t.Errorf("Expected player 1 to have 5 stones in hole 0 but got %d", p1.Holes[0])
 	}
 
+}
+
+func TestPlayer_PlayRound_UnsupportedHole(t *testing.T) {
+	p1 := model.NewPlayer()
+	p2 := model.NewPlayer()
+	p1.Holes[5] = 8
+
+	repeatTurnOutOfRange := p1.PlayRoundAgainstOpponent(12, p2)
+
+	if !repeatTurnOutOfRange {
+		t.Errorf("Expected to repeat the turn but got %v", repeatTurnOutOfRange)
+	}
+
+	repeatTurnNegativeInt := p1.PlayRoundAgainstOpponent(-2, p2)
+	if !repeatTurnNegativeInt {
+		t.Errorf("Expected to repeat the turn but got %v", repeatTurnNegativeInt)
+	}
 }

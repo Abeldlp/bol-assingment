@@ -37,11 +37,16 @@ func (p *Player) IncrementBucket() {
 	p.Bucket += 1
 }
 
-func (p *Player) GetOppositeHole(index int, opponent *Player) int {
-	oppositeIndex := len(p.Holes) - 1 - index
-	amount := opponent.Holes[oppositeIndex]
-	opponent.EmptyHole(oppositeIndex)
-	return amount
+func (p *Player) GetOpponentStonesIfEmptyLand(lastHoleSet int, opponent *Player) {
+	lastHoleSetValue := p.Holes[lastHoleSet]
+	oppositeIndex := len(p.Holes) - 1 - lastHoleSet
+	oppositeHole := opponent.Holes[oppositeIndex]
+
+	if lastHoleSetValue == 1 && oppositeHole > 0 {
+		p.EmptyHole(lastHoleSet)
+		p.Bucket += oppositeHole + 1
+		opponent.EmptyHole(oppositeIndex)
+	}
 }
 
 func (p *Player) IncrementHolesWithRemainingStones(onHand int, opponent *Player) (int, bool) {
@@ -62,15 +67,7 @@ func (p *Player) IncrementHolesWithRemainingStones(onHand int, opponent *Player)
 	}
 
 	lastHoleSet := setStones - 1
-	lastHoleSetValue := p.Holes[lastHoleSet]
-	oppositeIndex := len(p.Holes) - 1 - lastHoleSet
-	oppositeHole := opponent.Holes[oppositeIndex]
-
-	if lastHoleSetValue == 1 && oppositeHole > 0 {
-		p.EmptyHole(lastHoleSet)
-		p.Bucket += oppositeHole + 1
-		opponent.EmptyHole(oppositeIndex)
-	}
+	p.GetOpponentStonesIfEmptyLand(lastHoleSet, opponent)
 
 	return 0, lastIsBucket
 }
@@ -101,15 +98,7 @@ func (p *Player) MoveStonesUntilBucket(index int, opponent *Player) (int, bool) 
 	}
 
 	lastHoleSet := index + setStones
-	lastHoleSetValue := p.Holes[lastHoleSet]
-	oppositeIndex := len(p.Holes) - 1 - lastHoleSet
-	oppositeHole := opponent.Holes[oppositeIndex]
-
-	if lastHoleSetValue == 1 && oppositeHole > 0 {
-		p.EmptyHole(lastHoleSet)
-		p.Bucket += oppositeHole + 1
-		opponent.EmptyHole(oppositeIndex)
-	}
+	p.GetOpponentStonesIfEmptyLand(lastHoleSet, opponent)
 
 	return 0, lastIsBucket
 }
@@ -129,6 +118,11 @@ func (p *Player) MoveStonesUntilOpponentBucket(onHand int, opponent *Player) int
 
 func (p *Player) PlayRoundAgainstOpponent(selectedHole int, opponent *Player) bool {
 	bucketHit := false
+
+	if selectedHole > len(p.Holes) || selectedHole < 0 {
+		return true
+	}
+
 	left, lastOnBucket := p.MoveStonesUntilBucket(selectedHole, opponent)
 	bucketHit = lastOnBucket
 
