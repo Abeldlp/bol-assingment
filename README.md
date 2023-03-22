@@ -144,6 +144,6 @@ If any questions come your way don't hesitate to drop an email to <abel45991690@
 
 <p align="center">
   <img
-    src="https://raw.githubusercontent.com/catppuccin/catppuccin/dev/assets/footers/gray0_ctp_on_line.svg?sanitize=true"
+    src="assets/footer.png"
   />
 </p>
