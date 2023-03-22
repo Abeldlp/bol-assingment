@@ -14,7 +14,7 @@ type Player struct {
 
 func NewPlayer() *Player {
 	return &Player{
-		Holes:  custom_type.IntArray{4, 4, 4, 4, 4, 4},
+		Holes:  custom_type.IntArray{6, 6, 6, 6, 6, 6},
 		Bucket: 0,
 	}
 }

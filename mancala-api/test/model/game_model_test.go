@@ -69,7 +69,7 @@ func TestPlayRound(t *testing.T) {
 
 	game := model.NewMancalaGame(player1, player2)
 
-	game.PlayRound(0)
+	game.PlayRound(2)
 
 	if game.Turn != 1 {
 		t.Errorf("Expected turn to be 1 but got %d", game.Turn)
