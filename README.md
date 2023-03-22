@@ -1,6 +1,6 @@
 ![Caption](assets/intro.gif)
 
-## International Space Station app
+## Mancala Game
 
 This project is a persistent mancala game. It consists of a client application, an api gateway, an api service and a database.
 
