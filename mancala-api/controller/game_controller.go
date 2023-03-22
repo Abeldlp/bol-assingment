@@ -46,7 +46,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": game})
+	c.JSON(http.StatusCreated, gin.H{"data": game})
 }
 
 func Update(c *gin.Context) {

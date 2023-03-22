@@ -17,14 +17,14 @@ export default defineConfig({
       exposes: {
         "./Main": "./src/App.vue",
       },
-      shared: ["vue"],
+      shared: ["vue", "quasar"],
     }),
   ],
   server: {
-    port: 3001,
+    port: 3000,
   },
   preview: {
-    port: 3001,
+    port: 3000,
   },
   build: {
     minify: false,

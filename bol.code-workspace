@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "name": "api-gateway",
+      "path": "api-gateway"
+    },
+    {
+      "name": "mancala-client",
+      "path": "mancala-client"
+    },
+    {
+      "name": "mancala-api",
+      "path": "mancala-api"
+    }
+  ],
+  "settings": {}
+}
