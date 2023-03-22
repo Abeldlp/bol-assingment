@@ -7,9 +7,9 @@
 
 ## International Space Station app
 
-This project gets the current location from the international space station api, and stores it in a database for later use.
+This project is a persistent mancala game. It consists of a client application, an api gateway, an api service and a database.
 
-The whole purpose is to store the current location, together with the timezone, to be able to check on a specific date at a specific hour, how many minutes were spent by the ISS on a specific Timezone.
+You are able to create a new game, and play it. The game is persistent, so you can come back to it later, or if you are up to the challenge, play more than one game at the same time.
 
 - [Application Structure](#application-structure)
 - [Application Dataflow](#application-dataflow)
@@ -22,12 +22,9 @@ The whole purpose is to store the current location, together with the timezone, 
 
 This application is structured by:
 
-- **Cron Service (Go)** _A service which purpose is to run cronjobs_
-- **Api Service (Go)** _A web server to be consumed by client application_
-- **Mail Service (Go)** _A service that takes care of sending emails_
-- **Api Gateway (Go)** _An entry point to the services_
 - **Client (Vue)** _An application the end user can interact with_
-- **RabbitMQ** _Message broker_
+- **Api Gateway (Go)** _An entry point to the services_
+- **Mancala Service (Go)** _A web server to be consumed by client application_
 - **PostgreSQL Database** _Database to store ISS location_
 
 For local development all the applications run in docker containers and it is orchestrated via docker-compose
@@ -36,44 +33,28 @@ For local development all the applications run in docker containers and it is or
 
 <p align="center">
   <img
-    src="assets/app_design.png"
+    src="assets/infra.png"
   />
 </p>
 
-1. The Cron Service pulls the ISS's location every minute from the iss api and it is converted to a schema needed for our research.
-2. Once the data is converted, the Cron Service stores the data into the database, this proccess only goes one way and cron service is only responsible for writing data to the DB.
-3. After the data is saved, the Cron Service queues the timezone into a rabbitMQ queue.
-4. The Mail Service consumes the Notification Queue and on a receive event, it triggers the notification functionality.
-5. The Mail Service queries the database to find subscribed users based on the timezone recieved.
-6. After the users are found, it sends a notification to all of them.
-7. The Api Service can get and query the ISS location data.
-8. The Api Serice can also write subscribed users to the database.
-9. The Api Service recieves all the calls via the api gateway.
-10. The Client Vue application is responsible for displaying datatables with the data and create subscribers.
-11. The end user is capable to get satelite data and post it's email to our database.
+- Mancala client accessible on port 3000 locally.
+- Api gateway accessible on port 5000 locally. (This is the only port that should be exposed to the internet)
+- Api service accessible on port 8000 on docker network only.
+- Database accessible on port 5432 on docker network, and locally for development purposes.
 
 ### Running app locally
 
 > To be able to run the application you need docker and docker-compose installed. Please refer to the [docs](https://docs.docker.com/compose/install/) to install them before taking any further steps
-
-For the Mail service to work add your email credentials to `.env.docker`, the emails will be sent from the specified account.
-
-```
-MAIL_HOST="smtp.gmail.com"
-MAIL_DOMAIN_ADDRESS=example@mail.com
-MAIL_PASSWORD=mypassword
-```
-
-Clone this repository
+> Clone this repository
 
 ```bash
-git clone https://github.com/Abeldlp/iss.git
+git clone https://github.com/Abeldlp/bol-assingment.git
 ```
 
 Go to the directory
 
 ```bash
-cd iss
+cd bol-assingment
 ```
 
 Build docker images (cup of coffee)
@@ -88,7 +69,7 @@ Run all containers in detached mode
 docker-compose up -d
 ```
 
-At this point you will have five containers running and you can access the client on [http://localhost:3000](http://localhost:3000)
+At this point you will have four containers running and you can access the client on [http://localhost:3000](http://localhost:3000)
 
 <p align="center">
   <img
@@ -103,7 +84,7 @@ If you want to access the database container use a client of your liking, and co
 - PORT `5432`
 - DATABASE `app-db`
 
-If you want to play with the api, the api gateway is listening on [http://localhost:4444](http://localhost:4444)
+If you want to play with the api, the api gateway is listening on [http://localhost:5000](http://localhost:5000)
 
 To stop the containers you can run the following
 
@@ -122,78 +103,43 @@ Before running any tests don't forget to stop all the containers, since client e
 make test
 ```
 
-The above command will run api-service tests, cron-service tests, client unit tests and client e2e tests.
+The above command will run api-service tests.
+
+> Note: to run tests you need go installed locally
 
 To run them individually you can run the following:
 
 **Api Service**
 
 ```bash
-cd api-service && go test ./test
+cd mancala-api && go test ./test/...
 ```
 
-**Cron Service**
+or use the Makefile
 
 ```bash
-cd schedule-service && go test ./test
-```
-
-**Client (unit)**
-
-```bash
-cd client && npm run test:unit:ci
-```
-
-**Client (e2e)**
-
-```bash
-cd client && npm run test:e2e:ci
-```
-
-For the client's e2e testing you can also run them in preview mode, so you can visualize what the tests are doing on a Chromium, Electron or Firefox browser.
-You can run them with the following command:
-
-```bash
-cd client && npm run test:e2e
-```
-
-In case of client project showcase, it is also possible to run the project in mocking mode, which will mock api calls and use static data. The project will be served on [http://localhost:3000](http://localhost:3000)
-You can serve the project with mock locally with the following command:
-
-```bash
-cd client && npm run dev-mock
+make test
 ```
 
 ### Application usage
 
 The client application consists on:
 
-- Email subscription
-- Autofetch button.
-- Aggregated Datatable
-- Sample Datatable
-- Informational tree
+- Create mancala game
+- Select mancala game
+- Game board
 
-**Email subscription**
+**Create mancala game**
 
-By subscribing to the email service, you save the email and timezone in the database.
-Everytime a new ISS location is added to the database, the message broker will queue the timezone for the mail service to recieve. If the ISS is on you timezone it will send you an email to notify you.
+Creates a new mancala game record in the database, along with two players connected to that game.
 
-**Autofetch button**
+**Select mancala game**
 
-This button allows the user to fetch data automatically every minute so page reload is not required to fetch data.
+Shows a dropdown with the available games. You can select any game available and it will be loaded in the board below
 
-**Aggregated Datatable**
+**Game board**
 
-Datatable containing the data aggregated. You are able to paginate, sort and filter using the selectors.
-
-**Sample Datatable**
-
-Datatable containing all the data stored in the database. You are able to paginate and sort.
-
-**Informational Tree**
-
-You can always check the explanation of the page parts in case you get lost.
+Mancala board. Enjoy the game.
 
 ### Author message
 
