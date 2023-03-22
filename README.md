@@ -92,13 +92,12 @@ docker-compose down
 ### Application testing
 
 To run all tests at once you can make use of the Makefile. You will need `make` and `build-essentials` installed locally. Refer to your OS/Distro installation docs.
-Before running any tests don't forget to stop all the containers, since client e2e testing is using the same port mapping to serve with mock and run tests.
 
 ```bash
 make test
 ```
 
-The above command will run api-service tests.
+The above command will run mancala api-service tests and api-gateway tests.
 
 > Note: to run tests you need go installed locally
 
@@ -114,12 +113,6 @@ cd mancala-api && go test ./test/...
 
 ```bash
 cd api-gateway && go test ./test/...
-```
-
-or use the Makefile to run both
-
-```bash
-make test
 ```
 
 ### Application usage
