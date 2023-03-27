@@ -53,10 +53,32 @@ Go to the directory
 cd bol-assingment
 ```
 
+USING MAKEFILE
+
+> Note: to use the Makefile you need `make` and `build-essentials` installed locally. Refer to your OS/Distro installation docs.
+
+Run the following command
+
+```bash
+make up
+```
+
+This will build the docker images and run the containers in detached mode.
+
+> Note: this will take a while, as it will build the client application and the api service.
+
+If you want to run the containers by yourself, follow the steps below.
+
+Install client dependencies
+
+```bash
+cd mancala-client && npm install
+```
+
 Build docker images (cup of coffee)
 
 ```bash
-docker-compose build
+cd .. && docker-compose build
 ```
 
 Run all containers in detached mode
@@ -95,7 +117,8 @@ docker-compose down
 The api documentation is available on [http://localhost:5000/v1/api/docs/index.html](http://localhost:5000/v1/api/docs/index.html)
 
 The api documentation is generated using [swag](https://github.com/swaggo/swag). To generate the documentation you can run the following command
->Note: to generate the documentation you need swag installed locally. Refer to the [docs](https://github.com/swaggo/swag#getting-started) to install it.
+
+> Note: to generate the documentation you need swag installed locally. Refer to the [docs](https://github.com/swaggo/swag#getting-started) to install it.
 
 ```bash
 make docs
