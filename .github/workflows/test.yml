@@ -62,4 +62,4 @@ jobs:
                   context: ./mancala-api
                   file: ./mancala-api/Dockerfile
                   push: true
-                  tags: ghcr.io/Abeldlp/bol-assingment/mancala-api:latest
+                  tags: ghcr.io/abeldlp/bol-assingment/mancala-api:latest
