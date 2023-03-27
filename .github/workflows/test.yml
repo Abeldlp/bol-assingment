@@ -1,0 +1,41 @@
+on:
+    pull_request:
+        branches:
+            - main
+
+name: MANCALA TESTING
+
+jobs:
+    run_api_tests:
+        name: Run Mancala API Tests
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version-file: "mancala-api/go.mod"
+
+            - name: Install Go dependencies
+              run: cd mancala-api && go mod download
+
+            - name: Mancala API Test
+              run: cd mancala-api && go test -v ./...
+
+    run_api_gateway_tests:
+        name: Run API Gateway Tests
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version-file: "api-gateway/go.mod"
+
+            - name: Install Go dependencies
+              run: cd api-gateway && go mod download
+
+            - name: Mancala API Gateway Test
+              run: cd api-gateway && go test -v ./...
