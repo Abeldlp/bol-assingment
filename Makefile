@@ -1,4 +1,5 @@
 up:
+	if [ ! -d "./mancala-client/node_modules" ]; then cd mancala-client && npm install; fi
 	docker-compose up --build -d
 stop:
 	docker-compose stop
