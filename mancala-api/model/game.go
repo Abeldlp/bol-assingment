@@ -49,14 +49,6 @@ func (g *MancalaGame) PlayRound(holeIndex int) {
 	g.SetMancalaGameUser(player.ID, player)
 	g.SetMancalaGameUser(opponent.ID, opponent)
 
-	if player.GetHolesSum() == 0 {
-		opponent.Bucket += opponent.GetHolesSum()
-	}
-
-	if opponent.GetHolesSum() == 0 {
-		player.Bucket += player.GetHolesSum()
-	}
-
 	g.NextTurn(lasBucket)
 
 	g.GameOver = g.IsGameOver()
