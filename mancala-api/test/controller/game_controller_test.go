@@ -118,6 +118,6 @@ func TestGameController(t *testing.T) {
 		assert.Equal(t, game.ID, response.ID)
 		assert.Equal(t, 1, response.Turn)
 		assert.Equal(t, 1, response.Player1.Bucket)
-		assert.Equal(t, 5, response.Player2.Holes[5])
+		assert.Equal(t, 7, response.Player2.Holes[5])
 	})
 }
